@@ -108,7 +108,6 @@ function AddressDetailsPage(){
 		// subscribe to Transfer event
 		contractOnSocket.events
 		  .Transfer(function (error, events) {
-			console.log(events, error, "<<<>>>");
 			if (!error) {
 			  setContractEvent(contractEvent.unshift(events));
 			}

@@ -19,7 +19,7 @@ function Hero(){
       history.push(`/address?address=${searchItem}`);
     } else {
       // https://web3js.readthedocs.io/en/v1.3.4/web3-eth.html#gettransaction
-      history.push(`/txHash?hash=${searchItem}`);
+      history.push(`/txHash?txhash=${searchItem}`);
     }
   };
 	return (

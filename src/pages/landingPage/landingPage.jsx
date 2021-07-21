@@ -99,7 +99,7 @@ function LandingPage() {
           {
 			// display only the first 50 transaction
 			contractEvent.slice(0, 50).map((e) => (
-				<TableRow {...e} />
+				<TableRow key={e.transactionHash} {...e} />
 			))
 		  }
         </Box>
