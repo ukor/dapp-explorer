@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import {useHistory} from 'react-router-dom';
-import { Image, Box, Text, Flex, InputGroup, Input, InputRightElement, Button, useMediaQuery } from "@chakra-ui/react";
+import {useHistory, Link as ReactRouterLink} from 'react-router-dom';
+import { Image, Box, Text, Flex, InputGroup, Input, InputRightElement, Button, Link, useMediaQuery } from "@chakra-ui/react";
 import web3 from 'web3';
 
 import KeyLogo from '../assets/images/key_logo.webp';
@@ -27,21 +27,23 @@ function Hero(){
       <Box paddingY={6}>
         <Flex justify="flex-start" align="center" direction={ isLargeScreen ? "row" :  "column"}>
           <Box flex="2">
-            <Flex justify="flex-start" align="center">
-              <Box>
-                <Image width="150px" src={KeyLogo} />
-              </Box>
-              <Box flex="1">
-                <Text
-                  as="h3"
-                  color="#ff8400"
-                  fontSize="1.5rem"
-                  fontWeight="bold"
-                >
-                  Key Token Explorer
-                </Text>
-              </Box>
-            </Flex>
+            <Link textDecoration="none" as={ReactRouterLink} to='/'>
+              <Flex justify="flex-start" align="center">
+                <Box>
+                  <Image width="150px" src={KeyLogo} />
+                </Box>
+                <Box flex="1">
+                  <Text
+                    as="h3"
+                    color="#ff8400"
+                    fontSize="1.5rem"
+                    fontWeight="bold"
+                  >
+                    Key Token Explorer
+                  </Text>
+                </Box>
+              </Flex>
+            </Link>
           </Box>
           <Box marginTop= { isLargeScreen ? 0 : 6} flex="2">
             <Flex justify="flex-end">
