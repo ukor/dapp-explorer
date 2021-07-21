@@ -1,16 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
+import {useHistory} from 'react-router-dom';
 import { Image, Box, Text, Flex, InputGroup, Input, InputRightElement, Button, useMediaQuery } from "@chakra-ui/react";
+import web3 from 'web3';
 
 import KeyLogo from '../assets/images/key_logo.webp';
 
 const HeroWrapper = styled.div``;
 
 function Hero(){
+  const [searchItem, setSearchItem] = React.useState('');
 	const [isLargeScreen] = useMediaQuery("(min-width: 48rem)");
+  const history = useHistory();
 	const handleClick = () =>{
-		console.log('Search clicked');
-	};
+    // https://web3js.readthedocs.io/en/v1.3.4/web3-utils.html#isaddress
+    if (web3.utils.isAddress(searchItem)) {
+      // get address details
+      history.push(`/address?address=${searchItem}`);
+    } else {
+      // https://web3js.readthedocs.io/en/v1.3.4/web3-eth.html#gettransaction
+      history.push(`/txHash?hash=${searchItem}`);
+    }
+  };
 	return (
     <HeroWrapper>
       <Box paddingY={6}>
@@ -39,6 +50,8 @@ function Hero(){
                   <Input
                     pr="6rem"
                     type="text"
+                    value={searchItem}
+                    onChange={(event) => setSearchItem(event.target.value)}
                     size="lg"
                     placeholder="Enter tx hash / address"
                     _focus={{ borderColor: "#ff8400" }}
