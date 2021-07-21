@@ -5,6 +5,7 @@ import Spinner from "./components/spinner";
 
 const LandingPage = lazy(() => import("./pages/landingPage"));
 const AddressDetailsPage = lazy(() => import("./pages/address/addressDetails"));
+const TxHashPage = lazy(() => import("./pages/txHash/txDetails"));
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route exact path='/address'>
             <AddressDetailsPage />
+          </Route>
+          <Route exact path='/txHash'>
+            <TxHashPage />
           </Route>
         </Switch>
       </Router>
