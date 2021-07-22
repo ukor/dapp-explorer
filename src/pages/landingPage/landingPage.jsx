@@ -33,46 +33,38 @@ function LandingPage() {
 
   React.useEffect(() => {
     if (currentBlock !== 0) {
-      contract
-        .getPastEvents(
-          "Transfer",
-          {
-            fromBlock: currentBlock - 4999,
-            toBlock: "latest",
-          },
-          function (error, events) {
-            console.log(error, "error");
-            if (!error) {
-              console.log(events);
-              const eventSize = events.length;
-              if (eventSize > 1) {
-                // reverse the array so that recent event appears first
-                setContractEvent(
-                  events.map((item, idx) => {
-                    const event = events[eventSize - 1 - idx];
-                    // https://ethereum.stackexchange.com/a/7288/72258
-                    const timeStamp = web3Instance.eth.getBlock(
-                      event["blockNumber"]
-                    ).timestamp;
 
-                    event["timestamp"] = timeStamp
+      (async () => {
 
-                    var d = new Date(timeStamp * 1000);
-                    var s = d.toUTCString();
-                    s = s.substring(0, s.indexOf("GMT")) + "UTC";
-                    event["txTime"] = s;
-                    return event;
-                  })
-                );
-              } else {
-                setContractEvent(events);
-              }
+        let events = await contract.getPastEvents("Transfer", {
+          fromBlock: currentBlock - 4999,
+          toBlock: "latest",
+        });
+        // get only the first 50 events
+        events = events.splice(0, 50);
+        const eventSize = events.length;
+        const _events = [];
+        if (eventSize > 1) {
+          // reverse the array so that recent event appears first
+          for (let i = 0; i < eventSize; i++){
+            if(events[i].hasOwnProperty('blockNumber')){
+              const block = await web3Instance.eth.getBlock(events[i]["blockNumber"]);
+
+              events[i]["timestamp"] = block.timestamp;
+
+              var d = new Date(block.timestamp * 1000);
+              var s = d.toUTCString();
+              s = s.substring(0, s.indexOf("GMT")) + "UTC";
+              events[i]["txTime"] = s;
+
+              _events.unshift(events[i]);
             }
           }
-        )
-        .then(function (events) {
-          console.log(events, "events");
-        });
+          setContractEvent(_events);
+        } else {
+          setContractEvent(events);
+        }
+      })();
     }
   }, [currentBlock]);
 
@@ -80,9 +72,18 @@ function LandingPage() {
     // https://web3js.readthedocs.io/en/v1.3.4/web3-eth-contract.html#id50
     // subscribe to Transfer event
     contractOnSocket.events
-      .Transfer(function (error, events) {
-        console.log(events, error, "<<<>>>");
+      .Transfer(async function (error, events) {
         if (!error) {
+          const block = await web3Instance.eth.getBlock(
+            events["blockNumber"]
+          );
+
+          events["timestamp"] = block.timestamp;
+
+          var d = new Date(block.timestamp * 1000);
+          var s = d.toUTCString();
+          s = s.substring(0, s.indexOf("GMT")) + "UTC";
+          events["txTime"] = s;
           setContractEvent(contractEvent.unshift(events));
         }
       })
@@ -113,7 +114,7 @@ function LandingPage() {
           {
 			// display only the first 50 transaction
 			contractEvent.slice(0, 50).map((e) => (
-				<TableRow key={e.transactionHash} {...e} />
+				<TableRow key={`${e.transactionHash}_${e.returnValues.to}`} {...e} />
 			))
 		  }
         </Box>
