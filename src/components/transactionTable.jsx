@@ -34,6 +34,8 @@ function TableRow({
   returnValues,
   transactionHash,
   transactionIndex,
+  txTime,
+  signature,
 }) {
   return (
     <Box paddingY="2" flex={1}>
@@ -47,6 +49,7 @@ function TableRow({
           value={numeral(returnValues.value / DECIMALS).format("0,0")}
         />
         <TableItem label="To" value={returnValues.to} />
+        <TableItem label="Timestamp" value={txTime} />
         <Divider />
       </Flex>
     </Box>

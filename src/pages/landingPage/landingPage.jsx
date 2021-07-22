@@ -48,7 +48,21 @@ function LandingPage() {
               if (eventSize > 1) {
                 // reverse the array so that recent event appears first
                 setContractEvent(
-                  events.map((item, idx) => events[eventSize - 1 - idx])
+                  events.map((item, idx) => {
+                    const event = events[eventSize - 1 - idx];
+                    // https://ethereum.stackexchange.com/a/7288/72258
+                    const timeStamp = web3Instance.eth.getBlock(
+                      event["blockNumber"]
+                    ).timestamp;
+
+                    event["timestamp"] = timeStamp
+
+                    var d = new Date(timeStamp * 1000);
+                    var s = d.toUTCString();
+                    s = s.substring(0, s.indexOf("GMT")) + "UTC";
+                    event["txTime"] = s;
+                    return event;
+                  })
                 );
               } else {
                 setContractEvent(events);
